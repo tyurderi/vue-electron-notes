@@ -1,0 +1,16 @@
+app:
+  id: 1,
+  name: notes
+  api_key:
+    public: "some_public_key",
+    private: "some_private_key"
+  releases:
+    - 1:
+      version: "1.0.0"
+      date: "22-06-1998 13:06",
+      changelist:
+        1: "First version"
+      file:
+        win32: "/var/www/feedback-hub/files/archives/1_notes/win32_1.0.0.zip",
+        linux: "/var/www/feedback-hub/files/archives/1_notes/linux_1.0.0.zip",
+        darwin: "/var/www/feedback-hub/files/archives/1_notes/darwin_1.0.0.zip"

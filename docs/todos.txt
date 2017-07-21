@@ -1,0 +1,11 @@
+- Notizen importieren/exportieren
+- Notizen bzw. Ordner in der Cloud speichern
+- Update Funktion über den Feedback Hub
+- Verbessertes Design
+- Mehrere Sprachen
+- Suche über Ordner/Notizen (fehlertolerante Suche)
+- Design bei Bearbeitung des Namens eines Ordners fixen
+- Drag'n'Drop für Ordner und Notizen
+- WYSIWYG Editor (Listen, Checkboxen, Bilder etc)
+- Notizen mit Passwort schützen
+# Korrektes vergeben einer ID
