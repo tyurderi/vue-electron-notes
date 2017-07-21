@@ -70,6 +70,10 @@ export default {
     mounted()
     {
         this.$store.commit('LOAD');
+        
+        // Fix ids since they didn't fit well in the last version :/
+        this.$store.commit('FIX_IDS');
+        this.$store.commit('SAVE');
     },
     computed: {
         items()
@@ -98,11 +102,33 @@ export default {
         }
     },
     methods: {
+        getNextDirectoryID()
+        {
+            let id = this.$store.getters.nextID.directory + 1;
+            
+            this.$store.commit('SET_NEXT_ID', {
+                type: 'directory',
+                value: id
+            });
+            
+            return id;
+        },
+        getNextItemID()
+        {
+            let id = this.$store.getters.nextID.item + 1;
+
+            this.$store.commit('SET_NEXT_ID', {
+                type: 'item',
+                value: id
+            });
+
+            return id;
+        },
         createDirectory(directoryID)
         {
             let parent     = this.$store.getters.directories.find(d => d.id === directoryID),
                 category   = {
-                    id: Math.round(Math.random() * 100),
+                    id: this.getNextDirectoryID(),
                     parent: directoryID || null,
                     name: 'New folder',
                     editing: true,
@@ -110,16 +136,17 @@ export default {
                 };
 
             this.$store.commit('ADD_DIRECTORY', category);
-            // this.$store.commit('SELECT_DIRECTORY', category);
 
-            if (parent) {
+            if (parent)
+            {
                 parent.opened = true;
             }
 
             this.$nextTick(() => {
                 let input = document.querySelector('input[data-id="'+category.id+'"]');
 
-                if (input) {
+                if (input)
+                {
                     input.select();
                     input.focus();
                 }
@@ -131,12 +158,7 @@ export default {
         {
             let category = this.$store.getters.directories.find(d => d.id === directoryID);
 
-
-            if(!category) {
-                return;
-            }
-
-            if (needConfirm !== false && !confirm('Are you sure to delete this category?'))
+            if (!category || needConfirm !== false && !confirm('Are you sure to delete this category?'))
             {
                 return;
             }
@@ -159,11 +181,13 @@ export default {
         },
         createItem(directoryID)
         {
-            if (!directoryID) {
+            if (!directoryID)
+            {
                 return;
             }
+            
             let item = {
-                id: Math.round(Math.random() * 100),
+                id: this.getNextItemID(),
                 title: 'New item',
                 text: '',
                 created: new Date(),
@@ -183,16 +207,14 @@ export default {
         },
         deleteItem(itemID)
         {
-            let item        = this.$store.getters.items.find(item => item.id === itemID);
+            let item = this.$store.getters.items.find(item => item.id === itemID);
 
-            if (!item) {
+            if (!item || !confirm('Are you sure to delete this item?'))
+            {
                 return;
             }
-
-            if (!confirm('Are you sure to delete this item?')) {
-                return;
-            }
-            let directoryID = item.directoryID;;
+            
+            let directoryID = item.directoryID;
 
             this.$store.commit('REMOVE_ITEM', item);
 
