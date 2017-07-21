@@ -1,7 +1,7 @@
 {
-  "name": "rhinos-development",
-  "version": "0.0.0",
-  "description": "Rhinos Media Development Tool",
+  "name": "notes",
+  "version": "1.0.0",
+  "description": "A simple notes app for windows",
   "main": "./dist/main.js",
   "dependencies": {
     "babel-runtime": "^6.23.0",

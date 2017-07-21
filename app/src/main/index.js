@@ -11,10 +11,11 @@ function createWindow()
 {
     mainWindow = new BrowserWindow({
         height: 600,
-        width: 800,
+        width: 1000,
         center: true,
-        minWidth: 800,
-        minHeight: 600
+        minWidth: 1000,
+        minHeight: 600,
+        icon: __dirname + '/../../icons/icon.ico'
     });
 
     mainWindow.loadURL(winURL);

@@ -1,7 +1,7 @@
 {
-  "name": "rhinos-development",
-  "version": "0.0.0",
-  "description": "The rhinos development tool to make development faster, easier and more productive.",
+  "name": "notes",
+  "version": "1.0.0",
+  "description": "A simple notes app for windows",
   "scripts": {
     "build": "node tasks/release.js",
     "build:clean": "cross-env PLATFORM_TARGET=clean node tasks/release.js",
@@ -15,7 +15,7 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack -p --progress --colors --config webpack.renderer.config.js",
     "postinstall": "cd app && npm install"
   },
-  "author": "Tommy Meier <meier@rhinos-media.de>",
+  "author": "tm-rm <meier@rhinos-media.de>",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.16.2",
