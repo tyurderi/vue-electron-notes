@@ -9,6 +9,8 @@ import store  from './store';
 import './assets/less/all.less';
 import 'font-awesome-webpack';
 
+import '@/directives/inline-textbox';
+
 Vue.use(Electron);
 Vue.use(Router);
 Vue.config.debug = true;

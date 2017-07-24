@@ -15,7 +15,8 @@
                         <input type="text" v-model="item.name" class="flex" :data-id="item.id"
                             @blur="stopEdit(item)"
                             @keydown.enter.prevent="stopEdit(item)"
-                            @keydown.esc.prevent="stopEdit(item)" />
+                            @keydown.esc.prevent="stopEdit(item)"
+                        />
                     </template>
                     <template v-else>
                         {{ item.name }}

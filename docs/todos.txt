@@ -4,7 +4,7 @@
 - Verbessertes Design
 - Mehrere Sprachen
 - Suche über Ordner/Notizen (fehlertolerante Suche)
-- Design bei Bearbeitung des Namens eines Ordners fixen
+# Design bei Bearbeitung des Namens eines Ordners fixen
 - Drag'n'Drop für Ordner und Notizen
 - WYSIWYG Editor (Listen, Checkboxen, Bilder etc)
 - Notizen mit Passwort schützen

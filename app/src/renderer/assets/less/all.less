@@ -113,6 +113,7 @@ ul {
     .directories-container {
       width: 200px;
       border-right: 1px solid #ccc;
+      overflow-x: auto;
       ul.directory-tree {
         li.directory-item {
           min-height: 30px;
@@ -125,6 +126,7 @@ ul {
             .center;
             width: 30px;
             height: 30px;
+            min-width: 30px;
             font-size: 10px;
             cursor: pointer;
             .toggle-icon {
@@ -139,6 +141,7 @@ ul {
             font-size: 14px;
             line-height: 30px;
             -webkit-user-select: none;
+            white-space: nowrap;
             input {
               outline: 0 none;
               display: inline;
@@ -148,6 +151,7 @@ ul {
               font-size: 14px;
               height: 30px;
               line-height: inherit;
+              max-width: 100%;
             }
           }
           .indent-ul(10, 20px);

@@ -158,7 +158,7 @@ export default {
         {
             let category = this.$store.getters.directories.find(d => d.id === directoryID);
 
-            if (!category || needConfirm !== false && !confirm('Are you sure to delete this category?'))
+            if (!category || needConfirm !== false && !confirm('Are you sure to delete this directory?'))
             {
                 return;
             }
