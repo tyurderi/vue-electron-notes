@@ -38,24 +38,10 @@
                      </li>
                  </ul>
             </div>
-            <div class="items-container">
-                <div class="item" v-for="(item, key) in items" :key="key"
-                     :class="{ active: item.id === $store.getters.selectedItemID }"
-                    @click="$store.commit('SELECT_ITEM', item)">
-                    <span class="item-title">
-                        {{ item.title }}
-                    </span>
-                    <span class="item-date">
-                        {{ formatDate(item.created) }}
-                    </span>
-                </div>
-            </div>
+            <item-list :items="items"></item-list>
             <div class="content-container column">
-                <div class="editor column flex" v-if="item">
-                    <input type="text" v-model="item.title" ref="editorTitle"
-                        @keydown.enter.prevent="$refs.editorText.focus()">
-                    <textarea class="flex" v-model="item.text" ref="editorText"></textarea>
-                </div>
+                <editor v-if="this.$store.getters.selectedItemID"
+                        :key="this.$store.getters.selectedItemID"></editor>
             </div>
         </div>
     </div>
@@ -63,7 +49,8 @@
 
 <script>
 import DirectoryTree from '@/modules/DirectoryTree';
-import moment from 'moment';
+import ItemList from '@/modules/ItemList';
+import Editor from '@/modules/Editor';
 
 export default {
     name: 'index',
@@ -81,24 +68,6 @@ export default {
             return this.$store.getters.items.filter(item => {
                 return item.directoryID === this.$store.getters.selectedDirectoryID;
             });
-        },
-        item()
-        {
-            return this.$store.getters.items.find(item => {
-                return item.id === this.$store.getters.selectedItemID;
-            });
-        }
-    },
-    watch: {
-        item: {
-            deep: true,
-            handler(item) {
-                clearTimeout(this.itemSaveTimeout);
-
-                this.itemSaveTimeout = setTimeout(() => {
-                    this.$store.commit('SAVE');
-                }, 250);
-            }
         }
     },
     methods: {
@@ -230,14 +199,12 @@ export default {
             }
 
             this.$store.commit('SAVE');
-        },
-        formatDate(date)
-        {
-            return moment(date).format('MMMM Do YYYY, h:mm:ss a');
         }
     },
     components: {
-        DirectoryTree
+        DirectoryTree,
+        ItemList,
+        Editor
     }
 }
 </script>
