@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import settings from 'electron-settings';
+import _ from 'lodash';
 
 Vue.use(Vuex);
 
@@ -56,8 +57,16 @@ export default new Vuex.Store({
         LOAD(state)
         {
             state.directories = settings.get('directories')    || [];
-            state.items       = settings.get('items')          || [];
             state.nextID      = settings.get('auto_increment') || state.nextID;
+
+            state.items = (settings.get('items') || []).map(item => {
+                return _.assign({
+                    encrypted: false,
+                    decrypted: false,
+                    encryptedPassword: '',
+                    encryptedText: ''
+                }, item);
+            });
         },
         SAVE(state)
         {
@@ -65,6 +74,7 @@ export default new Vuex.Store({
             settings.set('items',          state.items);
             settings.set('auto_increment', state.nextID);
         },
+
         SELECT_DIRECTORY(state, payload)
         {
             state.selectedDirectoryID = payload.id;

@@ -1,14 +1,19 @@
 <template>
     <div class="items-container">
-        <div class="item" v-for="(item, key) in items" :key="key"
-             :class="{ active: item.id === $store.getters.selectedItemID }"
-             @click="$store.commit('SELECT_ITEM', item)">
-            <span class="item-title">
-                {{ item.title }}
-            </span>
-            <span class="item-date">
-                {{ formatDate(item.created) }}
-            </span>
+        <div class="item row" v-for="(item, key) in items" :key="key"
+             :class="{ active: selected(item) }"
+             @click="select(item)">
+            <div class="col flex">
+                <span class="item-title">
+                    {{ item.title }}
+                </span>
+                <span class="item-date">
+                    {{ moment(item.created).format('MMMM Do YYYY, h:mm:ss a') }}
+                </span>
+            </div>
+            <ul class="item-icons">
+                <li v-if="item.encrypted"><i class="fa fa-lock"></i></li>
+            </ul>
         </div>
     </div>
 </template>
@@ -22,9 +27,14 @@ export default {
         'items'
     ],
     methods: {
-        formatDate(date)
+        moment,
+        select(item)
         {
-            return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+            this.$store.commit('SELECT_ITEM', item)
+        },
+        selected(item)
+        {
+            return item.id === this.$store.getters.selectedItemID;
         }
     }
 }

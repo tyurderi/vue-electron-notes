@@ -19,6 +19,9 @@
                     <li @click="deleteItem($store.getters.selectedItemID)">
                         <i class="fa fa-trash"></i>
                     </li>
+                    <li @click="encryptItem($store.getters.selectedItemID)">
+                        <i class="fa fa-lock"></i>
+                    </li>
                 </ul>
             </div>
             <!--<div class="search-box">
@@ -51,6 +54,15 @@
 import DirectoryTree from '@/modules/DirectoryTree';
 import ItemList from '@/modules/ItemList';
 import Editor from '@/modules/Editor';
+
+import ItemEncryption from '@/components/ItemEncryption';
+
+import vex from 'vex-js';
+vex.registerPlugin(require('vex-dialog'))
+vex.defaultOptions.className = 'vex-theme-top'
+
+import 'vex-js/dist/css/vex.css';
+import 'vex-js/dist/css/vex-theme-top.css';
 
 export default {
     name: 'index',
@@ -161,7 +173,12 @@ export default {
                 text: '',
                 created: new Date(),
                 changed: new Date(),
-                directoryID: directoryID
+                directoryID: directoryID,
+                
+                encrypted: false,
+                decrypted: false,
+                encryptedPassword: '',
+                encryptedText: ''
             };
 
             this.$store.commit('ADD_ITEM', item);
@@ -199,6 +216,25 @@ export default {
             }
 
             this.$store.commit('SAVE');
+        },
+        encryptItem(itemID)
+        {
+            let item = this.$store.getters.items.find(item => item.id === itemID);
+            
+            if (item && item.encrypted === false)
+            {
+                vex.dialog.prompt({
+                    message: 'Enter password to encrypt note',
+                    placeholder: 'Enter password',
+                    callback: (password) =>
+                    {
+                        item.encrypted = true;
+                        item.decrypted = true;
+                        item.encryptedPassword = password;
+                        item.encryptedText = ItemEncryption.encrypt(item.text, password);
+                    }
+                });
+            }
         }
     },
     components: {

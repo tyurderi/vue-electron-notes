@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import crypto from 'crypto';
+
 export default {
     name: 'editor',
     watch: {
@@ -17,6 +19,7 @@ export default {
                 clearTimeout(this.itemSaveTimeout);
                 
                 this.itemSaveTimeout = setTimeout(() => {
+                    
                     this.$store.commit('SAVE');
                 }, 250);
             }
@@ -29,6 +32,9 @@ export default {
                 return item.id === this.$store.getters.selectedItemID;
             });
         }
+    },
+    methods: {
+    
     }
 }
 </script>
