@@ -12,7 +12,8 @@
                 </span>
             </div>
             <ul class="item-icons">
-                <li v-if="item.encrypted"><i class="fa fa-lock"></i></li>
+                <li v-if="item.encrypted && !item.decrypted"><i class="fa fa-lock"></i></li>
+                <li v-if="item.encrypted && item.decrypted"><i class="fa fa-unlock"></i></li>
             </ul>
         </div>
     </div>

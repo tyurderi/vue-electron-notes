@@ -11,6 +11,14 @@ import 'font-awesome-webpack';
 
 import '@/directives/inline-textbox';
 
+// meh
+import vex from 'vex-js';
+vex.registerPlugin(require('vex-dialog'))
+vex.defaultOptions.className = 'vex-theme-top'
+
+import 'vex-js/dist/css/vex.css';
+import 'vex-js/dist/css/vex-theme-top.css';
+
 Vue.use(Electron);
 Vue.use(Router);
 Vue.config.debug = true;

@@ -55,14 +55,11 @@ import DirectoryTree from '@/modules/DirectoryTree';
 import ItemList from '@/modules/ItemList';
 import Editor from '@/modules/Editor';
 
+// used for encryption stuff
+import _ from 'lodash';
 import ItemEncryption from '@/components/ItemEncryption';
-
 import vex from 'vex-js';
-vex.registerPlugin(require('vex-dialog'))
-vex.defaultOptions.className = 'vex-theme-top'
-
-import 'vex-js/dist/css/vex.css';
-import 'vex-js/dist/css/vex-theme-top.css';
+import bcrypt from 'bcryptjs';
 
 export default {
     name: 'index',
@@ -184,11 +181,6 @@ export default {
             this.$store.commit('ADD_ITEM', item);
             this.$store.commit('SELECT_ITEM', item);
 
-            this.$nextTick(() => {
-                this.$refs.editorTitle.select();
-                this.$refs.editorTitle.focus();
-            });
-
             this.$store.commit('SAVE');
         },
         deleteItem(itemID)
@@ -220,20 +212,37 @@ export default {
         encryptItem(itemID)
         {
             let item = this.$store.getters.items.find(item => item.id === itemID);
+
+            if (!item) return;
             
-            if (item && item.encrypted === false)
+            if (item.encrypted === false)
             {
-                vex.dialog.prompt({
+                vex.dialog.open({
                     message: 'Enter password to encrypt note',
-                    placeholder: 'Enter password',
-                    callback: (password) =>
+                    input: '<input name="password" type="password" placeholder="Password" required />',
+                    buttons: [
+                        _.assign(vex.dialog.buttons.YES, { text: 'Encrypt' }),
+                        _.assign(vex.dialog.buttons.NO, { text: 'Cancel' })
+                    ],
+                    callback: (data) =>
                     {
+                        if (!data || !data.password)
+                        {
+                            return;
+                        }
+
                         item.encrypted = true;
                         item.decrypted = true;
-                        item.encryptedPassword = password;
-                        item.encryptedText = ItemEncryption.encrypt(item.text, password);
+                        item.encryptedPassword = bcrypt.hashSync(data.password, 8);
+                        item.decryptedPassword = data.password;
+                        item.encryptedText     = ItemEncryption.encrypt(item.text, data.password);
                     }
                 });
+            }
+            else if(item.encrypted === true && item.decrypted === true)
+            {
+                item.decrypted = false;
+                item.decryptedPassword = '';
             }
         }
     },

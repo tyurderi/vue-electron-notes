@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import settings from 'electron-settings';
 import _ from 'lodash';
+import ItemEncryption from '@/components/ItemEncryption';
 
 Vue.use(Vuex);
 
@@ -71,8 +72,24 @@ export default new Vuex.Store({
         SAVE(state)
         {
             settings.set('directories',    state.directories);
-            settings.set('items',          state.items);
             settings.set('auto_increment', state.nextID);
+
+            settings.set('items', _.cloneDeep(state.items).map(item => {
+                if (item.encrypted === true)
+                {
+                    if (item.decrypted === true)
+                    {
+                        item.decrypted     = false;
+                        item.encryptedText = ItemEncryption.encrypt(item.text, item.decryptedPassword);
+                    }
+
+                    item.text          = '';
+
+                    delete item.decryptedPassword;
+                }
+
+                return item;
+            }));
         },
 
         SELECT_DIRECTORY(state, payload)
