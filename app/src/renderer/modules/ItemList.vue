@@ -1,20 +1,20 @@
 <template>
-    <div class="items-container">
-        <div class="item row" v-for="(item, key) in items" :key="key"
+    <div class="items-column">
+        <div class="item" v-for="(item, key) in items" :key="key"
              :class="{ active: selected(item) }"
              @click="select(item)">
-            <div class="col flex">
-                <span class="item-title">
+            <div class="item-meta">
+                <div class="item-name">
                     {{ item.title }}
-                </span>
-                <span class="item-date">
+                </div>
+                <div class="item-time">
                     {{ moment(item.created).format('MMMM Do YYYY, h:mm:ss a') }}
-                </span>
+                </div>
             </div>
-            <ul class="item-icons">
+            <!--<ul class="item-icons">
                 <li v-if="item.encrypted && !item.decrypted"><i class="fa fa-lock"></i></li>
                 <li v-if="item.encrypted && item.decrypted"><i class="fa fa-unlock"></i></li>
-            </ul>
+            </ul>-->
         </div>
     </div>
 </template>
@@ -31,7 +31,7 @@ export default {
         moment,
         select(item)
         {
-            this.$store.commit('SELECT_ITEM', item)
+            this.$items.select(item);
         },
         selected(item)
         {

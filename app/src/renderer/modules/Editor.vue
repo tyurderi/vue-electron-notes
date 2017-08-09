@@ -1,25 +1,24 @@
 <template>
-    <div class="editor column flex">
-        <div v-if="item.encrypted && !item.decrypted">
+    <div class="editor-column flex column">
+        <!--<div v-if="item.encrypted && !item.decrypted">
             <span class="header">
                 This note is encrypted. Do you want to <a @click="decrypt" href="#">decrypt</a>?
             </span>
         </div>
-        <div class="column flex" v-else>
-            <input type="text" v-model="item.title" ref="editorTitle"
+        <div class="column flex" v-else>-->
+            <input type="text" v-model="item.title" ref="editorTitle" class="item-name"
                    @keydown.enter.prevent="$refs.editorText.focus()">
 
-            <textarea class="flex" v-model="item.text" ref="editorText"></textarea>
-        </div>
+            <textarea class="item-text flex" v-model="item.text" ref="editorText"></textarea>
+        <!--</div>-->
     </div>
 </template>
 
 <script>
-import ItemEncryption from '@/components/ItemEncryption';
+/*import ItemEncryption from '@/components/ItemEncryption';
 import vex from 'vex-js';
 import _ from 'lodash';
-import bcrypt from 'bcryptjs';
-
+import bcrypt from 'bcryptjs';*/
 
 export default {
     name: 'editor',
@@ -39,7 +38,7 @@ export default {
                 
                 this.itemSaveTimeout = setTimeout(() => {
                     
-                    this.$store.commit('SAVE');
+                    this.$items.save();
                 }, 250);
             }
         }
@@ -55,7 +54,7 @@ export default {
     methods: {
         decrypt()
         {
-            vex.dialog.open({
+            /*vex.dialog.open({
                 message: 'Enter password to decrypt note',
                 input: '<input name="password" type="password" placeholder="Password" required />',
                 buttons: [
@@ -79,7 +78,7 @@ export default {
                     this.item.text      = ItemEncryption.decrypt(this.item.encryptedText, data.password);
                     this.item.decryptedPassword = data.password;
                 }
-            });
+            });*/
         }
     }
 }

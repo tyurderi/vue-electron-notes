@@ -13,8 +13,8 @@ import '@/directives/inline-textbox';
 
 // meh
 import vex from 'vex-js';
-vex.registerPlugin(require('vex-dialog'))
-vex.defaultOptions.className = 'vex-theme-top'
+vex.registerPlugin(require('vex-dialog'));
+vex.defaultOptions.className = 'vex-theme-top';
 
 import 'vex-js/dist/css/vex.css';
 import 'vex-js/dist/css/vex-theme-top.css';
@@ -22,6 +22,18 @@ import 'vex-js/dist/css/vex-theme-top.css';
 Vue.use(Electron);
 Vue.use(Router);
 Vue.config.debug = true;
+
+//
+import DirectoryManager from '@/components/DirectoryManager';
+import ItemManager from '@/components/ItemManager';
+
+Vue.use({
+    install(Vue, options)
+    {
+        Vue.prototype.$directories = new DirectoryManager(store);
+        Vue.prototype.$items       = new ItemManager(store);
+    }
+});
 
 const router = new Router({
     scrollBehavior: () => ({ y: 0 }),

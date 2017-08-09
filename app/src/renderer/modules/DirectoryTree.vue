@@ -1,7 +1,6 @@
 <template>
-    <ul class="directory-tree">
+    <ul class="flex">
         <li v-for="(item, key) in items" :key="key"
-            class="directory-item"
             :class="{ active: item.id === selectedDirectoryID }">
             <div class="row" @click="select(item)">
                 <span class="item-icon">
@@ -47,25 +46,18 @@ export default {
     methods: {
         select(directory)
         {
-            this.$store.commit('SELECT_DIRECTORY', directory);
+            this.$directories.select(directory);
 
             let item = this.$store.getters.items.find(item => item.directoryID === directory.id);
-
-            if (item)
-            {
-                this.$store.commit('SELECT_ITEM', item);
-            }
-            else
-            {
-                this.$store.commit('SELECT_ITEM', { id: null });
-            }
+            
+            this.$items.select(item || { id: null });
         },
         edit(item)
         {
             item.editing = true;
             
             this.$nextTick(() => {
-                document.querySelector('input[data-id="'+item.id+'"]').focus();
+                document.querySelector('input[data-id="' + item.id + '"]').focus();
             })
         },
         stopEdit(item)
@@ -76,8 +68,8 @@ export default {
             {
                 item.name = 'New folder';
             }
-
-            this.$store.commit('SAVE');
+            
+            this.$items.save();
         },
         children(id)
         {

@@ -1,45 +1,54 @@
 <template>
-    <div class="index">
+    <div class="app column">
         <div class="head row">
-            <div class="directories-header">
-                <ul class="actions row">
+            <div class="directory-column">
+                <ul class="actions">
                     <li @click="createDirectory($store.getters.selectedDirectoryID)">
-                        <i class="fa fa-plus"></i>
+                        <i class="fa fa-pencil"></i>
                     </li>
                     <li @click="deleteDirectory($store.getters.selectedDirectoryID)">
                         <i class="fa fa-trash"></i>
                     </li>
                 </ul>
             </div>
-            <div class="items-header">
-                <ul class="actions row">
-                    <li @click="createItem($store.getters.selectedDirectoryID)">
+            <div class="items-column">
+                <ul class="actions">
+                    <!--<li @click="createItem($store.getters.selectedDirectoryID)">
                         <i class="fa fa-plus"></i>
                     </li>
                     <li @click="deleteItem($store.getters.selectedItemID)">
                         <i class="fa fa-trash"></i>
-                    </li>
-                    <li @click="encryptItem($store.getters.selectedItemID)">
+                    </li>-->
+                    <li>
                         <i class="fa fa-lock"></i>
+                    </li>
+                    <li>
+                        <i class="fa fa-unlock"></i>
+                    </li>
+                    <li>
+                        <i class="fa fa-files-o"></i>
                     </li>
                 </ul>
             </div>
-            <!--<div class="search-box">
-                <input type="text" placeholder="Search" class="search-input" />
-                <span class="search-icon">
-                    <i class="fa fa-search"></i>
-                </span>
-            </div>-->
+            <div class="editor-column flex">
+                <!--<div class="search-input">
+                    <input type="text" placeholder="Search for directories or notes..." value="blabla" />
+                </div>
+                <div class="search-results">
+                    <span class="no-results">Nothing found</span>
+                </div>-->
+            </div>
+            <div class="title-column">
+              notes
+            </div>
         </div>
-        <div class="body row">
-             <div class="directories-container column">
+        <div class="body flex row">
+             <div class="directory-column column">
                  <directory-tree :id="null" :key="null" class="flex"></directory-tree>
 
-                 <ul class="directory-actions">
-                     <li @click="createDirectory(null)">
-                         <span>Create</span>
-                     </li>
-                 </ul>
+                 <button class="create center" @click="createDirectory(null)">
+                     <i class="fa fa-plus"></i>
+                 </button>
             </div>
             <item-list :items="items"></item-list>
             <div class="content-container column">
@@ -56,10 +65,10 @@ import ItemList from '@/modules/ItemList';
 import Editor from '@/modules/Editor';
 
 // used for encryption stuff
-import _ from 'lodash';
+/*import _ from 'lodash';
 import ItemEncryption from '@/components/ItemEncryption';
 import vex from 'vex-js';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcryptjs';*/
 
 export default {
     name: 'index',
@@ -80,108 +89,30 @@ export default {
         }
     },
     methods: {
-        getNextDirectoryID()
-        {
-            let id = this.$store.getters.nextID.directory + 1;
-            
-            this.$store.commit('SET_NEXT_ID', {
-                type: 'directory',
-                value: id
-            });
-            
-            return id;
-        },
-        getNextItemID()
-        {
-            let id = this.$store.getters.nextID.item + 1;
-
-            this.$store.commit('SET_NEXT_ID', {
-                type: 'item',
-                value: id
-            });
-
-            return id;
-        },
         createDirectory(directoryID)
         {
-            let parent     = this.$store.getters.directories.find(d => d.id === directoryID),
-                category   = {
-                    id: this.getNextDirectoryID(),
-                    parent: directoryID || null,
-                    name: 'New folder',
-                    editing: true,
-                    opened: false
-                };
-
-            this.$store.commit('ADD_DIRECTORY', category);
-
-            if (parent)
-            {
-                parent.opened = true;
-            }
-
+            let directory = this.$directories.create(directoryID);
+ 
             this.$nextTick(() => {
-                let input = document.querySelector('input[data-id="'+category.id+'"]');
-
-                if (input)
-                {
-                    input.select();
-                    input.focus();
-                }
+                this.$directories.focusInput(directory);
             });
-
-            this.$store.commit('SAVE');
         },
-        deleteDirectory(directoryID, needConfirm)
+        deleteDirectory(directoryID)
         {
-            let category = this.$store.getters.directories.find(d => d.id === directoryID);
+            let directory = this.$store.getters.directories.find(d => d.id === directoryID);
 
-            if (!category || needConfirm !== false && !confirm('Are you sure to delete this directory?'))
+            if (!directory || !confirm('Are you sure to delete this directory?'))
             {
                 return;
             }
-
-            let children = this.getDirectories(category.id);
-
-            if (children.length > 0)
-            {
-                children.forEach(child => this.deleteDirectory(child.id, false));
-            }
-
-            this.$store.commit('REMOVE_DIRECTORY', category);
-            this.$store.commit('SELECT_DIRECTORY', { id: null });
-
-            this.$store.commit('SAVE');
-        },
-        getDirectories(id)
-        {
-            return this.$store.getters.directories.filter(d => d.parent === id);
+            
+            this.$directories.remove(directory);
+            this.$directories.clearSelect();
+            this.$directories.save();
         },
         createItem(directoryID)
         {
-            if (!directoryID)
-            {
-                return;
-            }
-            
-            let item = {
-                id: this.getNextItemID(),
-                title: 'New item',
-                text: '',
-                created: new Date(),
-                changed: new Date(),
-                directoryID: directoryID,
-                
-                encrypted: false,
-                decrypted: false,
-                encryptedPassword: '',
-                encryptedText: ''
-            };
-
-            this.$store.commit('ADD_ITEM', item);
-            this.$store.commit('SELECT_ITEM', item);
-
-            this.$store.commit('SAVE');
+            return this.$items.create(directoryID);
         },
         deleteItem(itemID)
         {
@@ -192,26 +123,11 @@ export default {
                 return;
             }
             
-            let directoryID = item.directoryID;
-
-            this.$store.commit('REMOVE_ITEM', item);
-
-            item = this.$store.getters.items.find(item => item.directoryID === directoryID);
-
-            if (item)
-            {
-                this.$store.commit('SELECT_ITEM', item);
-            }
-            else
-            {
-                this.$store.commit('SELECT_ITEM', { id: null });
-            }
-
-            this.$store.commit('SAVE');
+            this.$items.remove(item);
         },
         encryptItem(itemID)
         {
-            let item = this.$store.getters.items.find(item => item.id === itemID);
+            /*let item = this.$store.getters.items.find(item => item.id === itemID);
 
             if (!item) return;
             
@@ -243,7 +159,7 @@ export default {
             {
                 item.decrypted = false;
                 item.decryptedPassword = '';
-            }
+            }*/
         }
     },
     components: {
