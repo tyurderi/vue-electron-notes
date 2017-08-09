@@ -58,15 +58,12 @@
             <!--<div class="search-overlay"></div>-->
         </div>
         
-        <div class="context-menu">
+        <div class="context-menu" v-if="contextMenu"
+            :style="{ left: contextMenu.posX + 'px', top: contextMenu.posY + 'px' }">
             <ul>
-                <li>
-                    <i class="fa fa-plus"></i>
-                    <span>Add</span>
-                </li>
-                <li>
-                    <i class="fa fa-trash"></i>
-                    <span>Remove</span>
+                <li v-for="item in contextMenu.items" @click="item.handler">
+                    <i class="fa" :class="'fa-' + item.icon"></i>
+                    <span>{{ item.label }}</span>
                 </li>
             </ul>
         </div>
@@ -86,6 +83,9 @@ import bcrypt from 'bcryptjs';*/
 
 export default {
     name: 'index',
+    data: () => ({
+        contextMenu: null
+    }),
     mounted()
     {
         this.$store.commit('LOAD');
@@ -94,11 +94,22 @@ export default {
         this.$store.commit('FIX_IDS');
         this.$store.commit('SAVE');
         
-        document.addEventListener('contextmenu', function(e) {
+        document.addEventListener('contextmenu', (e) => {
             e.preventDefault();
-            console.log('contextmenu, yo');
-            console.log(e);
+            
+            this.contextMenu = {
+                posX: e.clientX,
+                posY: e.clientY,
+                items: [
+                    { icon: 'plus', label: 'Add', handler: function() { console.log('add') } },
+                    { icon: 'trash', label: 'Remove', handler: function() { console.log('remove') } }
+                ]
+            };
         }, false);
+        
+        document.addEventListener('click', (e) => {
+            this.contextMenu = null;
+        });
     },
     computed: {
         items()
