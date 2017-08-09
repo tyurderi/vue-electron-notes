@@ -19,22 +19,22 @@
                     <li @click="deleteItem($store.getters.selectedItemID)">
                         <i class="fa fa-trash"></i>
                     </li>-->
-                    <li>
+                    <li :class="{ disabled: !itemSelected }">
                         <i class="fa fa-lock"></i>
                     </li>
-                    <li>
+                    <li :class="{ disabled: !itemSelected }">
                         <i class="fa fa-unlock"></i>
                     </li>
-                    <li>
+                    <li :class="{ disabled: !itemSelected }">
                         <i class="fa fa-files-o"></i>
                     </li>
                 </ul>
             </div>
             <div class="editor-column flex">
-                <!--<div class="search-input">
-                    <input type="text" placeholder="Search for directories or notes..." value="blabla" />
+                <div class="search-input">
+                    <input type="text" placeholder="Search for directories or notes..." />
                 </div>
-                <div class="search-results">
+                <!--<div class="search-results">
                     <span class="no-results">Nothing found</span>
                 </div>-->
             </div>
@@ -55,6 +55,20 @@
                 <editor v-if="this.$store.getters.selectedItemID"
                         :key="this.$store.getters.selectedItemID"></editor>
             </div>
+            <!--<div class="search-overlay"></div>-->
+        </div>
+        
+        <div class="context-menu">
+            <ul>
+                <li>
+                    <i class="fa fa-plus"></i>
+                    <span>Add</span>
+                </li>
+                <li>
+                    <i class="fa fa-trash"></i>
+                    <span>Remove</span>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
@@ -79,6 +93,12 @@ export default {
         // Fix ids since they didn't fit well in the last version :/
         this.$store.commit('FIX_IDS');
         this.$store.commit('SAVE');
+        
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            console.log('contextmenu, yo');
+            console.log(e);
+        }, false);
     },
     computed: {
         items()
@@ -86,6 +106,14 @@ export default {
             return this.$store.getters.items.filter(item => {
                 return item.directoryID === this.$store.getters.selectedDirectoryID;
             });
+        },
+        directorySelected()
+        {
+            return this.$store.getters.selectedDirectoryID;
+        },
+        itemSelected()
+        {
+            return this.$store.getters.selectedItemID;
         }
     },
     methods: {
