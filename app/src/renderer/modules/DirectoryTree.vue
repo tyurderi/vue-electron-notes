@@ -9,7 +9,7 @@
                         <i class="fa fa-chevron-down" v-if="item.opened"></i>
                     </span>
                 </span>
-                <span class="item-name flex row" @dblclick="edit(item)">
+                <span class="item-name flex row" @dblclick="edit(item)" @contextmenu.prevent="openMenu($event, item)">
                     <template v-if="item.editing">
                         <input type="text" v-model="item.name" class="flex" :data-id="item.id"
                             @blur="stopEdit(item)"
@@ -74,6 +74,34 @@ export default {
         children(id)
         {
             return this.$store.getters.directories.filter(d => d.parent === id);
+        },
+        openMenu(e, item)
+        {
+            this.$contextMenu.open(e, [
+                { icon: 'plus', label: 'Add', handler: this.onAdd.bind(this, item) },
+                { icon: 'trash', label: 'Remove', handler: this.onRemove.bind(this, item) }
+            ]);
+        },
+        onAdd(parent)
+        {
+            let directory = this.$directories.create(parent.id);
+    
+            this.$nextTick(() => {
+                this.$directories.focusInput(directory);
+            });
+        },
+        onRemove(parent)
+        {
+            let directory = this.$store.getters.directories.find(d => d.id === parent.id);
+    
+            if (!directory || !confirm('Are you sure to delete this directory?'))
+            {
+                return;
+            }
+    
+            this.$directories.remove(directory);
+            this.$directories.clearSelect();
+            this.$directories.save();
         }
     }
 }

@@ -3,22 +3,18 @@
         <div class="head row">
             <div class="directory-column">
                 <ul class="actions">
-                    <li @click="createDirectory($store.getters.selectedDirectoryID)">
+                    <li @click="createItem($store.getters.selectedDirectoryID)"
+                        :class="{ disabled: !directorySelected }">
                         <i class="fa fa-pencil"></i>
                     </li>
-                    <li @click="deleteDirectory($store.getters.selectedDirectoryID)">
+                    <li @click="deleteItem($store.getters.selectedItemID)"
+                        :class="{ disabled: !itemSelected }">
                         <i class="fa fa-trash"></i>
                     </li>
                 </ul>
             </div>
             <div class="items-column">
                 <ul class="actions">
-                    <!--<li @click="createItem($store.getters.selectedDirectoryID)">
-                        <i class="fa fa-plus"></i>
-                    </li>
-                    <li @click="deleteItem($store.getters.selectedItemID)">
-                        <i class="fa fa-trash"></i>
-                    </li>-->
                     <li :class="{ disabled: !itemSelected }">
                         <i class="fa fa-lock"></i>
                     </li>
@@ -46,7 +42,7 @@
              <div class="directory-column column">
                  <directory-tree :id="null" :key="null" class="flex"></directory-tree>
 
-                 <button class="create center" @click="createDirectory(null)">
+                 <button class="create center" @click="createDirectory">
                      <i class="fa fa-plus"></i>
                  </button>
             </div>
@@ -58,15 +54,7 @@
             <!--<div class="search-overlay"></div>-->
         </div>
         
-        <div class="context-menu" v-if="contextMenu"
-            :style="{ left: contextMenu.posX + 'px', top: contextMenu.posY + 'px' }">
-            <ul>
-                <li v-for="item in contextMenu.items" @click="item.handler">
-                    <i class="fa" :class="'fa-' + item.icon"></i>
-                    <span>{{ item.label }}</span>
-                </li>
-            </ul>
-        </div>
+        <context-menu></context-menu>
     </div>
 </template>
 
@@ -74,6 +62,7 @@
 import DirectoryTree from '@/modules/DirectoryTree';
 import ItemList from '@/modules/ItemList';
 import Editor from '@/modules/Editor';
+import ContextMenu from '@/modules/ContextMenu';
 
 // used for encryption stuff
 /*import _ from 'lodash';
@@ -93,23 +82,6 @@ export default {
         // Fix ids since they didn't fit well in the last version :/
         this.$store.commit('FIX_IDS');
         this.$store.commit('SAVE');
-        
-        document.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            
-            this.contextMenu = {
-                posX: e.clientX,
-                posY: e.clientY,
-                items: [
-                    { icon: 'plus', label: 'Add', handler: function() { console.log('add') } },
-                    { icon: 'trash', label: 'Remove', handler: function() { console.log('remove') } }
-                ]
-            };
-        }, false);
-        
-        document.addEventListener('click', (e) => {
-            this.contextMenu = null;
-        });
     },
     computed: {
         items()
@@ -128,26 +100,13 @@ export default {
         }
     },
     methods: {
-        createDirectory(directoryID)
+        createDirectory()
         {
-            let directory = this.$directories.create(directoryID);
- 
+            let directory = this.$directories.create();
+    
             this.$nextTick(() => {
                 this.$directories.focusInput(directory);
             });
-        },
-        deleteDirectory(directoryID)
-        {
-            let directory = this.$store.getters.directories.find(d => d.id === directoryID);
-
-            if (!directory || !confirm('Are you sure to delete this directory?'))
-            {
-                return;
-            }
-            
-            this.$directories.remove(directory);
-            this.$directories.clearSelect();
-            this.$directories.save();
         },
         createItem(directoryID)
         {
@@ -204,7 +163,8 @@ export default {
     components: {
         DirectoryTree,
         ItemList,
-        Editor
+        Editor,
+        ContextMenu
     }
 }
 </script>
