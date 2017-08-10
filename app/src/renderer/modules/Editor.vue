@@ -4,13 +4,13 @@
             <span class="header">
                 This note is encrypted. Do you want to <a @click="decrypt" href="#">decrypt</a>?
             </span>
-        </div>
-        <div class="column flex" v-else>-->
+        </div>-->
+        <div class="column flex">
             <input type="text" v-model="item.title" ref="editorTitle" class="item-name"
                    @keydown.enter.prevent="$refs.editorText.focus()">
 
             <textarea class="item-text flex" v-model="item.text" ref="editorText"></textarea>
-        <!--</div>-->
+        </div>
     </div>
 </template>
 
@@ -24,10 +24,12 @@ export default {
     name: 'editor',
     mounted()
     {
-        if (this.item.encrypted === false || this.item.decrypted === true)
+        if (this.item.isNew && (this.item.encrypted === false || this.item.decrypted === true))
         {
             this.$refs.editorTitle.select();
             this.$refs.editorTitle.focus();
+            
+            this.item.isNew = false;
         }
     },
     watch: {

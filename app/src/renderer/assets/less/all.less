@@ -120,6 +120,7 @@ ul { list-style: none; margin: 0; padding: 0; }
   .directory-column {
     width: 250px;
     ul {
+      overflow-y: auto;
       li {
         min-height: 30px;
         &.active {
@@ -181,6 +182,7 @@ ul { list-style: none; margin: 0; padding: 0; }
     width: 300px;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
+    overflow-y: auto;
     .item {
       .row;
       position: relative;
@@ -210,19 +212,20 @@ ul { list-style: none; margin: 0; padding: 0; }
     }
   }
   .editor-column {
-    padding: 10px;
     .item-name {
       border: 0 none;
       outline: 0 none;
       font-weight: 100;
       font-size: 20px;
-      margin: 0 0 15px 0;
+      padding: 10px;
     }
     .item-text {
+      padding: 10px;
       border: 0 none;
       outline: 0 none;
       font-family: 'Consolas', sans-serif;
       font-size: 14px;
+      resize: none;
     }
   }
   .search-overlay {
@@ -274,4 +277,18 @@ ul { list-style: none; margin: 0; padding: 0; }
       }
     }
   }
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eee;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
 }

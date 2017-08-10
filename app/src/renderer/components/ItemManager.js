@@ -23,11 +23,11 @@ export default class
             created: new Date(),
             changed: new Date(),
             directoryID: directoryID,
-            // data which will not be saved
             encrypted: false,
             decrypted: false,
             encryptedPassword: '',
-            encryptedText: ''
+            encryptedText: '',
+            isNew: true
         };
         
         this.add(item)

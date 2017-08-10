@@ -47,7 +47,7 @@
                  </button>
             </div>
             <item-list :items="items"></item-list>
-            <div class="content-container column">
+            <div class="content-container column flex">
                 <editor v-if="this.$store.getters.selectedItemID"
                         :key="this.$store.getters.selectedItemID"></editor>
             </div>
