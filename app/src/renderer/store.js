@@ -15,9 +15,14 @@ export default new Vuex.Store({
         nextID: {
             directory: 0,
             item: 0
-        }
+        },
+        privateMode: false
     },
     mutations: {
+        SET_PRIVATE_MODE(state, payload)
+        {
+            state.privateMode = payload;
+        },
         FIX_IDS(state)
         {
             if (settings.get('id_fix_executed') === true)
@@ -130,6 +135,8 @@ export default new Vuex.Store({
         items:          (state) => state.items,
         selectedItemID: (state) => state.selectedItemID,
 
-        nextID: (state) => state.nextID
+        nextID: (state) => state.nextID,
+        
+        privateMode: (state) => state.privateMode
     }
 });

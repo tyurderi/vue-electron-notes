@@ -1,7 +1,10 @@
 <template>
     <ul class="flex">
         <li v-for="(item, key) in items" :key="key"
-            :class="{ active: item.id === selectedDirectoryID }">
+            :class="{
+                active: item.id === selectedDirectoryID,
+                isPrivate: isPrivateMode && !(item.id === selectedDirectoryID)
+            }">
             <div class="row" @click="select(item)">
                 <span class="item-icon">
                     <span class="toggle-icon"  @click="item.opened = !item.opened" v-if="children(item.id).length > 0">
@@ -41,7 +44,8 @@ export default {
         {
             return this.children(this.id);
         },
-        selectedDirectoryID() { return this.$store.getters.selectedDirectoryID }
+        selectedDirectoryID() { return this.$store.getters.selectedDirectoryID },
+        isPrivateMode() { return this.$store.getters.privateMode }
     },
     methods: {
         select(directory)
@@ -79,7 +83,12 @@ export default {
         {
             this.$contextMenu.open(e, [
                 { icon: 'plus', label: 'Add', handler: this.onAdd.bind(this, item) },
-                { icon: 'trash', label: 'Remove', handler: this.onRemove.bind(this, item) }
+                { icon: 'trash', label: 'Remove', handler: this.onRemove.bind(this, item) },
+                {
+                    icon: 'eye',
+                    label: 'Toggle private mode',
+                    handler: this.onTogglePrivateMode.bind(this)
+                }
             ]);
         },
         onAdd(parent)
@@ -102,6 +111,12 @@ export default {
             this.$directories.remove(directory);
             this.$directories.clearSelect();
             this.$directories.save();
+        },
+        onTogglePrivateMode()
+        {
+            let privateMode = this.$store.getters.privateMode;
+            
+            this.$store.commit('SET_PRIVATE_MODE', !privateMode);
         }
     }
 }
