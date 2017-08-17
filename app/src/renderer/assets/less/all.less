@@ -1,26 +1,21 @@
-/* Colors */
 @base: rgba(232, 67, 53, 1);
 
-/* Very tiny grid system using flex box */
-.row { display: flex; flex-direction: row; }
-.column { display: flex; flex-direction: column;}
-.center { display: flex; align-items: center; justify-content: center; }
-.center-x { display: flex; justify-items: center; }
-.center-y { display: flex; align-items: center; }
-.flex { flex: 1; }
-.hidden { display: none; }
-.relative { position: relative; }
-.absolute { position: absolute; }
-.full-width { width: 100%; }
-.full-height { height: 100%; }
-.full-size { left: 0; right: 0; bottom: 0; top: 0; }
+@import "_mixins/grid";
+@import "_mixins/indent-ul";
+@import "_components/contextmenu";
+@import "_components/scrollbar";
+@import "_modules/search";
 
-/* The real styling */
 * {
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
 }
-ul { list-style: none; margin: 0; padding: 0; }
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 
 .app {
   position: fixed;
@@ -34,27 +29,7 @@ ul { list-style: none; margin: 0; padding: 0; }
   background: @base;
   height: 40px;
   box-shadow: 1px 0 3px rgba(0, 0, 0, 0.25);
-  ul.actions {
-    .row;
-    li {
-      .center;
-      width: 50px;
-      height: 40px;
-      color: #fff;
-      cursor: pointer;
-      transition: background 125ms;
-      &:hover {
-        background: rgba(255, 255, 255, 0.1);
-      }
-      &.disabled {
-        cursor: default;
-        color: lighten(@base, 25);
-        &:hover {
-          background: transparent;
-        }
-      }
-    }
-  }
+  @import "_components/header-actions";
   .directory-column {
     width: 250px;
   }
@@ -63,44 +38,6 @@ ul { list-style: none; margin: 0; padding: 0; }
   }
   .editor-column {
     .relative;
-    .search-input {
-      height: 40px;
-      padding: 5px 0;
-      input {
-        width: 250px;
-        height: 30px;
-        border: 0 none;
-        outline: 0 none;
-        padding: 0 7px;
-        font-size: 14px;
-      }
-    }
-    .search-results {
-      .absolute;
-      &:before {
-        .absolute;
-        display: block;
-        content: '';
-        width: 10px;
-        height: 10px;
-        top: -5px;
-        transform: rotate(45deg);
-        background: #fff;
-      }
-      z-index: 10;
-      top: 45px;
-      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-      border-radius: 3px;
-      background: #fff;
-      padding: 5px;
-      width: 250px;
-      height: 50px;
-      span.no-results {
-        .center;
-        .full-height;
-        font-size: 14px;
-      }
-    }
   }
   .title-column {
     font-family: 'Permanent Marker', cursive;
@@ -117,183 +54,7 @@ ul { list-style: none; margin: 0; padding: 0; }
 }
 .body {
   .relative;
-  .directory-column {
-    width: 250px;
-    ul {
-      overflow-y: auto;
-      li {
-        min-height: 30px;
-        &.active {
-          > .row {
-            background: #eee;
-            border-right: 3px solid @base;
-          }
-        }
-        &.isPrivate {
-          > .row span.item-name {
-            filter: blur(5px);
-          }
-        }
-        span.item-icon {
-          .center;
-          width: 30px;
-          height: 30px;
-          min-width: 30px;
-          font-size: 10px;
-          cursor: pointer;
-          .toggle-icon {
-            .center;
-            width: 100%;
-            height: 100%;
-          }
-        }
-        span.item-name {
-          display: block;
-          cursor: default;
-          font-size: 14px;
-          line-height: 30px;
-          -webkit-user-select: none;
-          white-space: nowrap;
-          input {
-            border: 0 none;
-            background: none;
-            outline: 0 none;
-            height: 100%;
-            font-size: 14px;
-          }
-        }
-        .indent-ul(10, 20px);
-      }
-    }
-    button.create {
-      border: 1px solid @base;
-      background: #fff;
-      border-radius: 3px;
-      margin: 15px auto;
-      display: block;
-      font-size: 14px;
-      transition: all 125ms;
-      width: 60px;
-      height: 30px;
-      outline: 0 none;
-      &:hover {
-        cursor: pointer;
-        background: @base;
-        color: #fff;
-      }
-    }
-  }
-  .items-column {
-    width: 300px;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    overflow-y: auto;
-    .item {
-      .row;
-      position: relative;
-      padding: 10px;
-      cursor: default;
-      user-select: none;
-      &:nth-child(even) {
-        background: rgba(0, 0, 0, 0.05);
-      }
-      &.active {
-        border-right: 3px solid @base;
-      }
-      .item-meta {
-        .flex;
-        .item-name {
-          font-size: 14px;
-        }
-        .item-time {
-          font-size: 12px;
-        }
-      }
-      .item-icons {
-        .center;
-        padding: 0 10px;
-        color: #333;
-      }
-    }
-  }
-  .editor-column {
-    .item-name {
-      border: 0 none;
-      outline: 0 none;
-      font-weight: 100;
-      font-size: 20px;
-      padding: 10px;
-    }
-    .item-text {
-      padding: 10px;
-      border: 0 none;
-      outline: 0 none;
-      font-family: 'Consolas', sans-serif;
-      font-size: 14px;
-      resize: none;
-    }
-  }
-  .search-overlay {
-    .absolute;
-    .full-size;
-    .full-width;
-    .full-height;
-    background: rgba(0, 0, 0, 0.2);
-    z-index: 5;
-  }
-}
-
-/* Nice mixins */
-.indent-ul(@n, @size, @i: 1) when(@i =< @n) {
-  ul li {
-    > .row {
-      padding-left: @size * @i;
-    }
-    .indent-ul(@n, @size, @i + 1);
-  }
-}
-
-.context-menu {
-  position: fixed;
-  top: 200px;
-  left: 100px;
-  z-index: 10;
-  background: #fff;
-  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #ccc;
-  padding: 5px 0;
-  border-radius: 3px;
-  min-width: 150px;
-  ul {
-    li {
-      .row;
-      .center-y;
-      padding: 3px 7px;
-      font-size: 14px;
-      transition: all 125ms;
-      &:hover {
-        background: rgba(0, 0, 0, 0.05);
-        cursor: pointer;
-      }
-      i {
-        .center;
-        width: 20px;
-        margin: 0 5px 0 0;
-      }
-    }
-  }
-}
-
-::-webkit-scrollbar {
-  width: 3px;
-}
-
-::-webkit-scrollbar-track {
-  background: #eee;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
+  @import "_modules/directory-tree";
+  @import "_modules/items";
+  @import "_modules/editor";
 }

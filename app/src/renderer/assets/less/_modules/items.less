@@ -1,0 +1,33 @@
+.items-column {
+  width: 300px;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  overflow-y: auto;
+  .item {
+    .row;
+    position: relative;
+    padding: 10px;
+    cursor: default;
+    user-select: none;
+    &:nth-child(even) {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    &.active {
+      border-right: 3px solid @base;
+    }
+    .item-meta {
+      .flex;
+      .item-name {
+        font-size: 14px;
+      }
+      .item-time {
+        font-size: 12px;
+      }
+    }
+    .item-icons {
+      .center;
+      padding: 0 10px;
+      color: #333;
+    }
+  }
+}

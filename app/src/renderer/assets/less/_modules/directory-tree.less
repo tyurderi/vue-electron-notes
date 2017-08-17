@@ -1,0 +1,66 @@
+.directory-column {
+  width: 250px;
+  ul {
+    overflow-y: auto;
+    li {
+      min-height: 30px;
+      &.active {
+        > .row {
+          background: #eee;
+          border-right: 3px solid @base;
+        }
+      }
+      &.isPrivate {
+        > .row span.item-name {
+          filter: blur(5px);
+        }
+      }
+      span.item-icon {
+        .center;
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+        font-size: 10px;
+        cursor: pointer;
+        .toggle-icon {
+          .center;
+          width: 100%;
+          height: 100%;
+        }
+      }
+      span.item-name {
+        display: block;
+        cursor: default;
+        font-size: 14px;
+        line-height: 30px;
+        -webkit-user-select: none;
+        white-space: nowrap;
+        input {
+          border: 0 none;
+          background: none;
+          outline: 0 none;
+          height: 100%;
+          font-size: 14px;
+        }
+      }
+      .indent-ul(10, 20px);
+    }
+  }
+  button.create {
+    border: 1px solid @base;
+    background: #fff;
+    border-radius: 3px;
+    margin: 15px auto;
+    display: block;
+    font-size: 14px;
+    transition: all 125ms;
+    width: 60px;
+    height: 30px;
+    outline: 0 none;
+    &:hover {
+      cursor: pointer;
+      background: @base;
+      color: #fff;
+    }
+  }
+}

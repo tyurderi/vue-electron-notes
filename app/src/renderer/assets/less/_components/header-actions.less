@@ -1,0 +1,21 @@
+ul.actions {
+  .row;
+  li {
+    .center;
+    width: 50px;
+    height: 40px;
+    color: #fff;
+    cursor: pointer;
+    transition: background 125ms;
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    &.disabled {
+      cursor: default;
+      color: lighten(@base, 25);
+      &:hover {
+        background: transparent;
+      }
+    }
+  }
+}
