@@ -55,21 +55,9 @@ export default class
      */
     remove(item)
     {
-        let directoryID = item.directoryID;
-    
         this.$store.commit('REMOVE_ITEM', item);
-    
-        item = this.find(item => item.directoryID === directoryID);
-    
-        if (item)
-        {
-            this.select(item);
-        }
-        else
-        {
-            this.clearSelect();
-        }
         
+        this.selectBest();
         this.save();
     }
     

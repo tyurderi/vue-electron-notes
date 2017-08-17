@@ -1,7 +1,7 @@
 <template>
     <div class="items-column column">
         <div class="items flex">
-            <div class="item" v-for="(item, key) in filteredItems" :key="key"
+            <div class="item" v-for="(item, key) in sortedItems" :key="key"
                  :class="{ active: selected(item) }"
                  @click="select(item)">
                 <div class="item-meta">
@@ -50,6 +50,12 @@ export default {
             return this.$store.getters.itemView === 'default'
                 ? this.items.filter(n => n.archived === false)
                 : this.items.filter(n => n.archived === true);
+        },
+        sortedItems()
+        {
+            return this.filteredItems.sort((a, b) => {
+                return moment(b.changed).unix() - moment(a.changed).unix();
+            })
         }
     },
     methods: {

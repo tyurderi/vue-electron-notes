@@ -35,10 +35,19 @@ export default {
     watch: {
         item: {
             deep: true,
-            handler(item) {
+            handler(item)
+            {
+                if (this.saveLock === true)
+                {
+                    this.saveLock = false;
+                    return;
+                }
+                
                 clearTimeout(this.itemSaveTimeout);
                 
                 this.itemSaveTimeout = setTimeout(() => {
+                    this.saveLock = true;
+                    this.item.changed = new Date();
                     
                     this.$items.save();
                 }, 250);
