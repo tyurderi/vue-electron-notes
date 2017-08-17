@@ -91,11 +91,16 @@ export default class
      */
     selectBest()
     {
-        let archived    = this.$store.getters.itemView === 'archived',
+        let moment      = require('moment'),
+            archived    = this.$store.getters.itemView === 'archived',
             directoryID = this.$store.getters.selectedDirectoryID,
-            item        = this.$store.getters.items.find(item => {
-                return item.directoryID === directoryID && item.archived === archived;
-            });
+            item        = this.$store.getters.items
+                .sort((a, b) => {
+                    return moment(b.changed).unix() - moment(a.changed).unix();
+                })
+                .find(item => {
+                    return item.directoryID === directoryID && item.archived === archived;
+                });
     
         this.select(item || { id: null });
     }
