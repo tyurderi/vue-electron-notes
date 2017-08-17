@@ -99,6 +99,20 @@ export default class
     }
     
     /**
+     * Select the best matching item id of the current opened directory.
+     */
+    selectBest()
+    {
+        let archived    = this.$store.getters.itemView === 'archived',
+            directoryID = this.$store.getters.selectedDirectoryID,
+            item        = this.$store.getters.items.find(item => {
+                return item.directoryID === directoryID && item.archived === archived;
+            });
+    
+        this.select(item || { id: null });
+    }
+    
+    /**
      * Save all items.
      */
     save()

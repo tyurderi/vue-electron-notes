@@ -51,11 +51,8 @@ export default {
         select(directory)
         {
             this.$directories.select(directory);
-
-            let archived = this.$store.getters.itemView === 'archived',
-                item     = this.$store.getters.items.find(item => item.directoryID === directory.id && item.archived === archived);
-            
-            this.$items.select(item || { id: null });
+    
+            this.$items.selectBest();
         },
         edit(item)
         {

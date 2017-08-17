@@ -173,6 +173,7 @@ export default {
             if (item)
             {
                 item.archived = true;
+                this.$nextTick(() => this.$items.selectBest());
             }
         },
         unarchiveItem()
@@ -183,6 +184,7 @@ export default {
             if (item)
             {
                 item.archived = false;
+                this.$nextTick(() => this.$items.selectBest());
             }
         }
     },
