@@ -52,7 +52,8 @@ export default {
         {
             this.$directories.select(directory);
 
-            let item = this.$store.getters.items.find(item => item.directoryID === directory.id);
+            let archived = this.$store.getters.itemView === 'archived',
+                item     = this.$store.getters.items.find(item => item.directoryID === directory.id && item.archived === archived);
             
             this.$items.select(item || { id: null });
         },

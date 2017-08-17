@@ -72,6 +72,14 @@ export default {
             {
                 this.$store.commit('SET_ITEM_VIEW', 'default');
             }
+    
+            let archived    = this.$store.getters.itemView === 'archived',
+                directoryID = this.$store.getters.selectedDirectoryID,
+                item        = this.$store.getters.items.find(item => {
+                    return item.directoryID === directoryID && item.archived === archived;
+                });
+    
+            this.$items.select(item || { id: null });
         }
     }
 }
