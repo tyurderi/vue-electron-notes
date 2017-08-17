@@ -24,6 +24,12 @@
                     <li :class="{ disabled: !itemSelected }">
                         <i class="fa fa-files-o"></i>
                     </li>
+                    <li :class="{ disabled: !itemSelected }" @click="archiveItem" v-if="$store.getters.itemView === 'default'">
+                        <i class="fa fa-caret-square-o-down"></i>
+                    </li>
+                    <li :class="{ disabled: !itemSelected }" @click="unarchiveItem" v-else>
+                        <i class="fa fa-caret-square-o-up"></i>
+                    </li>
                 </ul>
             </div>
             <div class="editor-column flex">
@@ -158,6 +164,26 @@ export default {
                 item.decrypted = false;
                 item.decryptedPassword = '';
             }*/
+        },
+        archiveItem()
+        {
+            let itemID = this.$store.getters.selectedItemID,
+                item   = this.$store.getters.items.find(n => n.id === itemID);
+            
+            if (item)
+            {
+                item.archived = true;
+            }
+        },
+        unarchiveItem()
+        {
+            let itemID = this.$store.getters.selectedItemID,
+                item   = this.$store.getters.items.find(n => n.id === itemID);
+    
+            if (item)
+            {
+                item.archived = false;
+            }
         }
     },
     components: {

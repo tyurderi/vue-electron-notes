@@ -27,7 +27,8 @@ export default class
             decrypted: false,
             encryptedPassword: '',
             encryptedText: '',
-            isNew: true
+            isNew: true,
+            archived: false
         };
         
         this.add(item)

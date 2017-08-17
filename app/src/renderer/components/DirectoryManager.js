@@ -69,6 +69,11 @@ export default class
     
     select(directory)
     {
+        if (directory && directory.id !== this.$store.getters.selectedCategoryID)
+        {
+            this.$store.commit('SET_ITEM_VIEW', 'default');
+        }
+        
         this.$store.commit('SELECT_DIRECTORY', directory);
     }
     

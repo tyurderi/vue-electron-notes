@@ -16,12 +16,17 @@ export default new Vuex.Store({
             directory: 0,
             item: 0
         },
-        privateMode: false
+        privateMode: false,
+        itemView: 'default'
     },
     mutations: {
         SET_PRIVATE_MODE(state, payload)
         {
             state.privateMode = payload;
+        },
+        SET_ITEM_VIEW(state, payload)
+        {
+            state.itemView = payload;
         },
         FIX_IDS(state)
         {
@@ -70,7 +75,8 @@ export default new Vuex.Store({
                     encrypted: false,
                     decrypted: false,
                     encryptedPassword: '',
-                    encryptedText: ''
+                    encryptedText: '',
+                    archived: false
                 }, item);
             });
         },
@@ -88,7 +94,7 @@ export default new Vuex.Store({
                         item.encryptedText = ItemEncryption.encrypt(item.text, item.decryptedPassword);
                     }
 
-                    item.text          = '';
+                    item.text = '';
 
                     delete item.decryptedPassword;
                 }
@@ -129,7 +135,7 @@ export default new Vuex.Store({
         }
     },
     getters: {
-        directories:        (state) => state.directories,
+        directories:         (state) => state.directories,
         selectedDirectoryID: (state) => state.selectedDirectoryID,
 
         items:          (state) => state.items,
@@ -137,6 +143,7 @@ export default new Vuex.Store({
 
         nextID: (state) => state.nextID,
         
-        privateMode: (state) => state.privateMode
+        privateMode: (state) => state.privateMode,
+        itemView:    (state) => state.itemView
     }
 });
