@@ -6,6 +6,7 @@
 @import "_components/scrollbar";
 @import "_components/button";
 @import "_modules/search";
+@import "_modules/modal";
 
 * {
   box-sizing: border-box;
@@ -24,38 +25,37 @@ ul {
   left: 0;
   bottom: 0;
   right: 0;
-}
-
-.head {
-  background: @base;
-  height: 40px;
-  box-shadow: 1px 0 3px rgba(0, 0, 0, 0.25);
-  @import "_components/header-actions";
-  .directory-column {
-    width: 250px;
+  > .head {
+    background: @base;
+    height: 40px;
+    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.25);
+    @import "_components/header-actions";
+    .directory-column {
+      width: 250px;
+    }
+    .items-column {
+      width: 300px;
+    }
+    .editor-column {
+      .relative;
+    }
+    .title-column {
+      font-family: 'Permanent Marker', cursive;
+      display: inline-block;
+      height: 30px;
+      margin: 5px;
+      padding: 0 15px 0 0;
+      font-size: 25px;
+      line-height: 25px;
+      text-align: right;
+      color: #fff;
+      width: 80px;
+    }
   }
-  .items-column {
-    width: 300px;
-  }
-  .editor-column {
+  > .body {
     .relative;
+    @import "_modules/directory-tree";
+    @import "_modules/items";
+    @import "_modules/editor";
   }
-  .title-column {
-    font-family: 'Permanent Marker', cursive;
-    display: inline-block;
-    height: 30px;
-    margin: 5px;
-    padding: 0 15px 0 0;
-    font-size: 25px;
-    line-height: 25px;
-    text-align: right;
-    color: #fff;
-    width: 80px;
-  }
-}
-.body {
-  .relative;
-  @import "_modules/directory-tree";
-  @import "_modules/items";
-  @import "_modules/editor";
 }

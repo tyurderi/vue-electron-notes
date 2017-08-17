@@ -1,6 +1,6 @@
 <template>
     <div class="app column">
-        <div class="head row">
+        <div class="head row blurrable">
             <div class="directory-column">
                 <ul class="actions">
                     <li @click="createItem($store.getters.selectedDirectoryID)"
@@ -15,13 +15,13 @@
             </div>
             <div class="items-column">
                 <ul class="actions">
-                    <li :class="{ disabled: !itemSelected }">
+                    <li :class="{ disabled: !itemSelected }" @click="encryptItem">
                         <i class="fa fa-lock"></i>
                     </li>
-                    <li :class="{ disabled: !itemSelected }">
+                    <li :class="{ disabled: !itemSelected }" @click="decryptItem">
                         <i class="fa fa-unlock"></i>
                     </li>
-                    <li :class="{ disabled: !itemSelected }">
+                    <li :class="{ disabled: !itemSelected }" @click="duplicateItem">
                         <i class="fa fa-files-o"></i>
                     </li>
                     <li :class="{ disabled: !itemSelected }" @click="archiveItem" v-if="$store.getters.itemView === 'default'">
@@ -44,7 +44,7 @@
               notes
             </div>
         </div>
-        <div class="body flex row">
+        <div class="body flex row blurrable">
              <div class="directory-column column">
                  <directory-tree :id="null" :key="null" class="flex"></directory-tree>
 
@@ -61,6 +61,7 @@
         </div>
         
         <context-menu></context-menu>
+        <modal ref="modal"></modal>
     </div>
 </template>
 
@@ -69,6 +70,7 @@ import DirectoryTree from '@/modules/DirectoryTree';
 import ItemList from '@/modules/ItemList';
 import Editor from '@/modules/Editor';
 import ContextMenu from '@/modules/ContextMenu';
+import Modal from '@/modules/Modal';
 
 // used for encryption stuff
 /*import _ from 'lodash';
@@ -88,6 +90,8 @@ export default {
         // Fix ids since they didn't fit well in the last version :/
         this.$store.commit('FIX_IDS');
         this.$store.commit('SAVE');
+    
+        console.log(this.$refs.modal);
     },
     computed: {
         items()
@@ -129,7 +133,7 @@ export default {
             
             this.$items.remove(item);
         },
-        encryptItem(itemID)
+        encryptItem()
         {
             /*let item = this.$store.getters.items.find(item => item.id === itemID);
 
@@ -165,6 +169,10 @@ export default {
                 item.decryptedPassword = '';
             }*/
         },
+        decryptItem()
+        {
+        
+        },
         archiveItem()
         {
             let itemID = this.$store.getters.selectedItemID,
@@ -186,13 +194,18 @@ export default {
                 item.archived = false;
                 this.$nextTick(() => this.$items.selectBest());
             }
+        },
+        duplicateItem()
+        {
+        
         }
     },
     components: {
         DirectoryTree,
         ItemList,
         Editor,
-        ContextMenu
+        ContextMenu,
+        Modal
     }
 }
 </script>
