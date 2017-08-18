@@ -15,7 +15,7 @@
             </div>
             <div class="items-column">
                 <ul class="actions">
-                    <li :class="{ disabled: !(item && !item.encrypted || item.decrypted) }" @click="encryptItem">
+                    <li :class="{ disabled: !(item && !item.encrypted || item && item.decrypted) }" @click="encryptItem">
                         <i class="fa fa-lock"></i>
                     </li>
                     <li :class="{ disabled: !(item && item.encrypted && item.decrypted) }" @click="decryptItem">
