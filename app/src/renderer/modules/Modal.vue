@@ -12,15 +12,27 @@
                 <div class="body">
                     <div class="fields" v-if="config.fields">
                         <template v-for="field in config.fields">
-                            <input v-if="field.type === 'text'" type="text" :name="field.name" :placeholder="field.placeholder" v-model="field.value" />
-                            <input v-if="field.type === 'password'" type="password" :name="field.name" :placeholder="field.placeholder" v-model="field.value" />
-                            <input v-if="field.type === 'email'" type="email" :name="field.name" :placeholder="field.placeholder" v-model="field.value" />
+                            <input v-if="field.type === 'text'" type="text" :name="field.name"
+                                   :placeholder="field.placeholder" v-model="field.value"
+                                   :autofocus="field.focus||false"
+                                   @keydown.enter.prevent="dispatchSubmit"
+                                   @keydown.esc.prevent="dispatchClose" />
                             
+                            <input v-if="field.type === 'password'" type="password" :name="field.name"
+                                   :placeholder="field.placeholder" v-model="field.value"
+                                   :autofocus="field.focus||false"
+                                   @keydown.enter.prevent="dispatchSubmit"
+                                   @keydown.esc.prevent="dispatchClose" />
                             
+                            <input v-if="field.type === 'email'" type="email" :name="field.name"
+                                   :placeholder="field.placeholder" v-model="field.value"
+                                   :autofocus="field.focus||false"
+                                   @keydown.enter.prevent="dispatchSubmit"
+                                   @keydown.esc.prevent="dispatchClose" />
                         </template>
                     </div>
                     <div class="buttons" v-if="config.buttons">
-                        <button v-for="button in config.buttons" @click="button.handler">
+                        <button v-for="button in config.buttons" @click="dispatchClick(button)">
                             {{ button.label }}
                         </button>
                     </div>
@@ -44,33 +56,16 @@ export default {
             width: 'auto',
             height: 'auto',
             buttons: [],
-            fields: []
+            fields: [],
+            submitOnEnter: true,
+            closeOnEsc: true
         },
         config: {}
     }),
     mounted()
     {
-        this.$this = this;
-        this.show({
-            title: 'Enter password to encrypt the note',
-            width: '400px',
-            //height: '200px',
-            fields: [
-                {
-                    name: 'password',
-                    type: 'password',
-                    placeholder: 'Password'
-                }
-            ],
-            buttons: [
-                {
-                    label: 'Encrypt',
-                    handler: (e, modal, w) => {
-                        console.log(e);
-                    }
-                }
-            ]
-        });
+        this.$this   = this;
+        global.modal = this;
     },
     methods: {
         show(config)
@@ -97,11 +92,34 @@ export default {
                     : element.classList.remove('blurred');
             });
         },
-        getValue(name)
+        dispatchClick(button)
         {
-            let field = this.config.fields.find(n => n.name === name);
+            if (typeof button.handler === 'function')
+            {
+                let values = {};
+                
+                this.config.fields.forEach((field) => {
+                    values[field.name] = field.value;
+                });
+                
+                button.handler(values);
+            }
+        },
+        dispatchSubmit()
+        {
+            let button = this.config.buttons.find(n => n.type === 'submit');
             
-            return field ? field.value : null;
+            if (this.config.submitOnEnter && button)
+            {
+                this.dispatchClick(button);
+            }
+        },
+        dispatchClose()
+        {
+            if (this.config.closeOnEsc)
+            {
+                this.close();
+            }
         }
     }
 }

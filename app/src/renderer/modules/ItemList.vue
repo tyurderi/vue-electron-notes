@@ -12,10 +12,10 @@
                         {{ moment(item.created).format('MMMM Do YYYY, h:mm:ss a') }}
                     </div>
                 </div>
-                <!--<ul class="item-icons">
+                <ul class="item-icons">
                     <li v-if="item.encrypted && !item.decrypted"><i class="fa fa-lock"></i></li>
                     <li v-if="item.encrypted && item.decrypted"><i class="fa fa-unlock"></i></li>
-                </ul>-->
+                </ul>
             </div>
             <div class="no-items" v-if="!filteredItems.length">
                 No items found

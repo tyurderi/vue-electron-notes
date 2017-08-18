@@ -1,11 +1,21 @@
 <template>
     <div class="editor-column flex column">
-        <!--<div v-if="item.encrypted && !item.decrypted">
+        <div class="column flex center password-form" v-if="item.encrypted && !item.decrypted">
             <span class="header">
-                This note is encrypted. Do you want to <a @click="decrypt" href="#">decrypt</a>?
+                This note is encrypted.
             </span>
-        </div>-->
-        <div class="column flex">
+            <span class="input">
+                <input type="password" name="password" v-model="decryptedPassword" placeholder="Enter password"
+                       @keydown.enter.prevent="decrypt"/>
+                <button @click.prevent="decrypt">
+                    Decrypt
+                </button>
+            </span>
+            <span class="invalid-password" v-if="invalidPassword">
+                The password you entered is wrong.
+            </span>
+        </div>
+        <div class="column flex" v-else>
             <input type="text" v-model="item.title" ref="editorTitle" class="item-name"
                    @keydown.enter.prevent="$refs.editorText.focus()">
 
@@ -15,13 +25,17 @@
 </template>
 
 <script>
-/*import ItemEncryption from '@/components/ItemEncryption';
-import vex from 'vex-js';
+import ItemEncryption from '@/components/ItemEncryption';
 import _ from 'lodash';
-import bcrypt from 'bcryptjs';*/
+import bcrypt from 'bcryptjs';
 
 export default {
     name: 'editor',
+    data: () => ({
+        saveLock: false,
+        decryptedPassword: '',
+        invalidPassword: false
+    }),
     mounted()
     {
         if (this.item.isNew && (this.item.encrypted === false || this.item.decrypted === true))
@@ -65,31 +79,19 @@ export default {
     methods: {
         decrypt()
         {
-            /*vex.dialog.open({
-                message: 'Enter password to decrypt note',
-                input: '<input name="password" type="password" placeholder="Password" required />',
-                buttons: [
-                    _.assign(vex.dialog.buttons.YES, { text: 'Decrypt' }),
-                    _.assign(vex.dialog.buttons.NO, { text: 'Cancel' })
-                ],
-                callback: (data) =>
-                {
-                    if (!data || !data.password)
-                    {
-                        return;
-                    }
-
-                    if (!bcrypt.compareSync(data.password, this.item.encryptedPassword))
-                    {
-                        console.log('wrong password!');
-                        return;
-                    }
-
-                    this.item.decrypted = true;
-                    this.item.text      = ItemEncryption.decrypt(this.item.encryptedText, data.password);
-                    this.item.decryptedPassword = data.password;
-                }
-            });*/
+            if (!this.decryptedPassword || !bcrypt.compareSync(this.decryptedPassword, this.item.encryptedPassword))
+            {
+                this.invalidPassword = true;
+                return;
+            }
+    
+            this.saveLock        = true;
+            this.invalidPassword = false;
+            
+            this.item.decrypted = true;
+            this.item.text      = ItemEncryption.decrypt(this.item.encryptedText, this.decryptedPassword);
+            this.item.decryptedPassword = this.decryptedPassword;
+            this.decryptedPassword = '';
         }
     }
 }

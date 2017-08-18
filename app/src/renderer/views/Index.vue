@@ -15,10 +15,10 @@
             </div>
             <div class="items-column">
                 <ul class="actions">
-                    <li :class="{ disabled: !itemSelected }" @click="encryptItem">
+                    <li :class="{ disabled: !(item && !item.encrypted || item.decrypted) }" @click="encryptItem">
                         <i class="fa fa-lock"></i>
                     </li>
-                    <li :class="{ disabled: !itemSelected }" @click="decryptItem">
+                    <li :class="{ disabled: !(item && item.encrypted && item.decrypted) }" @click="decryptItem">
                         <i class="fa fa-unlock"></i>
                     </li>
                     <li :class="{ disabled: !itemSelected }" @click="duplicateItem">
@@ -73,10 +73,9 @@ import ContextMenu from '@/modules/ContextMenu';
 import Modal from '@/modules/Modal';
 
 // used for encryption stuff
-/*import _ from 'lodash';
+import _ from 'lodash';
 import ItemEncryption from '@/components/ItemEncryption';
-import vex from 'vex-js';
-import bcrypt from 'bcryptjs';*/
+import bcrypt from 'bcryptjs';
 
 export default {
     name: 'index',
@@ -107,6 +106,10 @@ export default {
         itemSelected()
         {
             return this.$store.getters.selectedItemID;
+        },
+        item()
+        {
+            return this.$store.getters.items.find(n => n.id === this.itemSelected);
         }
     },
     methods: {
@@ -135,43 +138,53 @@ export default {
         },
         encryptItem()
         {
-            /*let item = this.$store.getters.items.find(item => item.id === itemID);
-
+            let item = this.$store.getters.items.find(item => item.id === this.$store.getters.selectedItemID);
+    
             if (!item) return;
             
-            if (item.encrypted === false)
+            if (item.encrypted === true && item.decrypted === true)
             {
-                vex.dialog.open({
-                    message: 'Enter password to encrypt note',
-                    input: '<input name="password" type="password" placeholder="Password" required />',
-                    buttons: [
-                        _.assign(vex.dialog.buttons.YES, { text: 'Encrypt' }),
-                        _.assign(vex.dialog.buttons.NO, { text: 'Cancel' })
-                    ],
-                    callback: (data) =>
-                    {
-                        if (!data || !data.password)
-                        {
-                            return;
+                item.decrypted         = false;
+                item.decryptedPassword = '';
+                item.text              = '';
+            }
+            else if(item.encrypted === false)
+            {
+                modal.show({
+                    title: 'Enter password to encrypt the note',
+                    width: '350px',
+                    fields: [{ name: 'password', type: 'password', placeholder: 'Password', focus: true }],
+                    buttons: [{
+                        type: 'submit',
+                        label: 'Encrypt',
+                        handler: ({ password }) => {
+                            if (password)
+                            {
+                                item.encrypted = true;
+                                item.decrypted = true;
+                                item.encryptedPassword = bcrypt.hashSync(password, 8);
+                                item.decryptedPassword = password;
+                                item.encryptedText     = ItemEncryption.encrypt(item.text, password);
+                    
+                                modal.close();
+                            }
                         }
-
-                        item.encrypted = true;
-                        item.decrypted = true;
-                        item.encryptedPassword = bcrypt.hashSync(data.password, 8);
-                        item.decryptedPassword = data.password;
-                        item.encryptedText     = ItemEncryption.encrypt(item.text, data.password);
-                    }
+                    }]
                 });
             }
-            else if(item.encrypted === true && item.decrypted === true)
-            {
-                item.decrypted = false;
-                item.decryptedPassword = '';
-            }*/
         },
         decryptItem()
         {
-        
+            let item = this.$store.getters.items.find(item => item.id === this.$store.getters.selectedItemID);
+            
+            if (item && item.encrypted === true && item.decrypted === true)
+            {
+                item.encrypted = false;
+                item.decrypted = false;
+                item.encryptedPassword = '';
+                item.decryptedPassword = '';
+                item.encryptedText     = '';
+            }
         },
         archiveItem()
         {
